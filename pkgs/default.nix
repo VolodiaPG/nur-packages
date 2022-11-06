@@ -23,8 +23,8 @@ in
 rec {
   # Binary cache information
   _binaryCache = pkgs.recurseIntoAttrs rec {
-    url = "https://volodiapg-nur-packages.cachix.org";
-    publicKey = "volodiapg-nur-packages.cachix.org-1:sV/1k2wQC4ostoLRjsXM932vflOi7A5HzGJMBRxKe0s=";
+    url = "https://volodiapg.cachix.org";
+    publicKey = "volodiapg.cachix.org-1:XcJQeUW+7kWbHEqwzFbwIJ/fLix3mddEYa/kw8XXoRI=";
 
     readme = pkgs.writeTextFile rec {
       name = "00000-readme";
@@ -36,8 +36,8 @@ rec {
 
         Or, use variables from this repository in case I change them:
 
-        nix.settings.substituters = [ nur.repos.volodiapg-nur-packages._binaryCache.url ];
-        nix.settings.trusted-public-keys = [ nur.repos.volodiapg-nur-packages._binaryCache.publicKey ];
+        nix.settings.substituters = [ nur.repos.volodiapg._binaryCache.url ];
+        nix.settings.trusted-public-keys = [ nur.repos.volodiapg._binaryCache.publicKey ];
 
         > Or the extra- variants
 
@@ -48,7 +48,7 @@ rec {
       '';
       meta = {
         description = text;
-        homepage = "https://github.com/xddxdd/nur-packages";
+        homepage = "https://github.com/volodiapg/nur-packages";
         license = pkgs.lib.licenses.unlicense;
       };
     };
@@ -56,4 +56,29 @@ rec {
 
   # My packages
   svpflow = pkg ./svpflow { };
+
+  # To use:
+  # final: prev: {
+  #   gnome = prev.nur.repos.volodiapg-nur-packages.gnome-smooth;
+  # }
+  gnome-smooth = pkgs.gnome.overrideScope' (gself: gsuper: {
+    mutter = gsuper.mutter.overrideAttrs (oldAttrs: {
+      src = pkgs.fetchgit {
+        url = "https://gitlab.gnome.org/GNOME/mutter";
+        rev = "cc19547b8c579667d1bd1738dd5ea0f74b63578a";
+        sha256 = "sha256-otfT1dn4ZGrz9LwwH827xxne33ne4Xk0v3rHjIaV4F0=";
+      };
+
+      patches = [
+        # Fix build with separate sysprof.
+        # https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/2572
+        (pkgs.fetchpatch {
+          url = "https://gitlab.gnome.org/GNOME/mutter/-/commit/285a5a4d54ca83b136b787ce5ebf1d774f9499d5.patch";
+          sha256 = "/npUE3idMSTVlFptsDpZmGWjZ/d2gqruVlJKq4eF4xU=";
+        })
+        # https://salsa.debian.org/gnome-team/mutter/-/blob/ubuntu/master/debian/patches/x11-Add-support-for-fractional-scaling-using-Randr.patch
+        ./1441-main.patch
+      ];
+    });
+  });
 }
