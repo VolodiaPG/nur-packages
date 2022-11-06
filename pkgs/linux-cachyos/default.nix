@@ -3,7 +3,7 @@
 , lib
 , fetchFromGitHub
 , buildLinux
-, lto ? false
+, lto ? true
 , ...
 } @ args:
 
