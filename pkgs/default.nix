@@ -31,15 +31,13 @@ rec {
       text = ''
         This NUR has a binary cache. Use the following settings to access it:
 
-        nix.settings.substituters = [ "${url}" ];
-        nix.settings.trusted-public-keys = [ "${publicKey}" ];
+        nix.settings.extra-substituters = [ "${url}" ];
+        nix.settings.extra-trusted-public-keys = [ "${publicKey}" ];
 
         Or, use variables from this repository in case I change them:
 
         nix.settings.substituters = [ nur.repos.volodiapg._binaryCache.url ];
         nix.settings.trusted-public-keys = [ nur.repos.volodiapg._binaryCache.publicKey ];
-
-        > Or the extra- variants
 
         Or, if you use NixOS <= 21.11:
 
