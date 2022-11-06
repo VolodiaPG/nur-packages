@@ -54,6 +54,8 @@ rec {
 
   # My packages
   svpflow = pkg ./svpflow { };
+  
+  linux-cachyos = pkg ./linux-cachyos { };
 
   # To use:
   # final: prev: {
