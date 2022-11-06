@@ -3,6 +3,7 @@
 , lib
 , fetchFromGitHub
 , buildLinux
+, lto ? false
 , ...
 } @ args:
 
@@ -23,16 +24,26 @@ let
     rev = "ff9fb0d3439982f11b53ad2c197fffe46a81b4e1";
     sha256 = "sha256-d8qpPlRvThtelqaDHNLL5D6eV6Dv3pFr3opXg5/eS7Q=";
   };
+
+  # https://github.com/NixOS/nixpkgs/pull/129806
+  stdenvLLVM =
+    let
+      llvmPin = pkgs.llvmPackages_latest.override {
+        bootBintools = null;
+        bootBintoolsNoLibc = null;
+      };
+
+      stdenv' = pkgs.overrideCC llvmPin.stdenv llvmPin.clangUseLLVM;
+    in
+    stdenv'.override {
+      extraNativeBuildInputs = [ llvmPin.lld pkgs.patchelf ];
+    };
 in
 buildLinux {
-  inherit stdenv lib version;
+  inherit lib version;
 
-  # src = fetchFromGitHub {
-  #   owner = "xanmod";
-  #   repo = "linux";
-  #   rev = "${version}-xanmod${release}";
-  #   sha256 = "sha256-JMfAtiPDgoVF+ypeFXev06PL39ZM2H7m07IxpasjAoM=";
-  # };
+  stdenv = if lto then stdenvLLVM else stdenv;
+  extraMakeFlags = lib.optionals lto [ "LLVM=1" "LLVM_IAS=1" ];
 
   src = fetchTarball {
     url = "https://cdn.kernel.org/pub/linux/kernel/v${_major}.x/linux-${version}.tar.xz";
@@ -41,7 +52,20 @@ buildLinux {
 
   modDirVersion = "${version}-cachyos-bore";
 
-  structuredExtraConfig = import ./config.nix args;
+  structuredExtraConfig =
+    let
+      cfg = import ./config.nix args;
+    in
+    if lto then
+      ((builtins.removeAttrs cfg [ "GCC_PLUGINS" "FORTIFY_SOURCE" ]) // (with lib.kernel; {
+        LTO = yes;
+        LTO_NONE = no;
+        HAS_LTO_CLANG = yes;
+        LTO_CLANG_FULL = yes;
+        LTO_CLANG_THIN = no;
+        HAVE_GCC_PLUGINS = yes;
+      })) else cfg;
+
 
   # kernelPatches = [ ];
 
