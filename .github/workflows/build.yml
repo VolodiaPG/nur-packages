@@ -6,10 +6,10 @@ on:
       - main
       - master
   schedule:
-    # rebuild everyday at 2:51
-    # TIP: Choose a random time here so not all repositories are build at once:
-    # https://www.random.org/clock-times/?num=1&earliest=01%3A00&latest=08%3A00&interval=5&format=html&rnd=new
-    - cron:  '51 2 * * *'
+  #   # rebuild everyday at 2:51
+  #   # TIP: Choose a random time here so not all repositories are build at once:
+  #   # https://www.random.org/clock-times/?num=1&earliest=01%3A00&latest=08%3A00&interval=5&format=html&rnd=new
+     - cron:  '53 3 * * *'
 jobs:
   tests:
     strategy:
@@ -19,8 +19,8 @@ jobs:
         #
         # The repo name as used in
         # https://github.com/nix-community/NUR/blob/master/repos.json
-        nurRepo:
-          - <YOUR_REPO_NAME>
+        # nurRepo:
+        #   - <YOUR_REPO_NAME>
         # Set this to cache your build results in cachix for faster builds
         # in CI and for everyone who uses your cache.
         #
@@ -32,7 +32,7 @@ jobs:
         # Github found at
         # https://github.com/<your_githubname>/nur-packages/settings/secrets
         cachixName:
-          - <YOUR_CACHIX_NAME>
+          - volodiapg-nur-packages
         nixPath:
           - nixpkgs=channel:nixos-unstable
           - nixpkgs=channel:nixpkgs-unstable
@@ -72,7 +72,7 @@ jobs:
           -I $PWD
     - name: Build nix packages
       run: nix shell -f '<nixpkgs>' nix-build-uncached -c nix-build-uncached ci.nix -A cacheOutputs
-    - name: Trigger NUR update
-      # Don't replace <YOUR_REPO_NAME> here!
-      if: ${{ matrix.nurRepo != '<YOUR_REPO_NAME>' }}
-      run: curl -XPOST "https://nur-update.herokuapp.com/update?repo=${{ matrix.nurRepo }}"
+    # - name: Trigger NUR update
+    #   # Don't replace <YOUR_REPO_NAME> here!
+    #   if: ${{ matrix.nurRepo != '<YOUR_REPO_NAME>' }}
+    #   run: curl -XPOST "https://nur-update.herokuapp.com/update?repo=${{ matrix.nurRepo }}"
