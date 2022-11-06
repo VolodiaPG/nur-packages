@@ -7,7 +7,7 @@
 , p7zip
 , patchelf
 , ...
-}:
+} @ args:
 stdenv.mkDerivation rec {
   name = "svpflow-${version}";
   version = "4.5.210";
