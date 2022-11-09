@@ -65,8 +65,8 @@ rec {
     mutter = gsuper.mutter.overrideAttrs (oldAttrs: {
       src = pkgs.fetchgit {
         url = "https://gitlab.gnome.org/GNOME/mutter";
-        rev = "cc19547b8c579667d1bd1738dd5ea0f74b63578a";
-        sha256 = "sha256-otfT1dn4ZGrz9LwwH827xxne33ne4Xk0v3rHjIaV4F0=";
+        rev = "8329a3eb5f4960df919e0348bd445c40568d3d60";
+        sha256 = "sha256-5YTeC/HQ+5i+np8r96s8fwGShQqZnYg4n5RiLXTmZ4k=";
       };
 
       patches = [
