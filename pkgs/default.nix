@@ -55,7 +55,8 @@ rec {
   # My packages
   svpflow = pkg ./svpflow { };
   
-  linux-cachyos = pkg ./linux-cachyos { };
+  #linux-cachyos = pkg ./linux-cachyos { };
+  linux-xanmod-volodiapg = pkg ./linux-xanmod { };
 
   # To use:
   # final: prev: {
