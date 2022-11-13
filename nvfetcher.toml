@@ -1,0 +1,3 @@
+[asterisk-alaw16]
+src.git = "https://github.com/traud/asterisk-alaw16.git"
+fetch.github = "traud/asterisk-alaw16"
