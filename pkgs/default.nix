@@ -13,10 +13,10 @@
 }:
 
 let
-  sources = pkgs.callPackage ../_sources/generated.nix { };
-  pkg = path: args: pkgs.callPackage path ({
-    inherit sources;
-  } // args);
+  # sources = pkgs.callPackage ../_sources/generated.nix { };
+  # pkg = path: args: pkgs.callPackage path ({
+  #   inherit sources;
+  # } // args);
   ifNotCI = p: if ci then null else p;
   ifFlakes = p: if inputs != null then p else null;
 in
@@ -53,21 +53,20 @@ rec {
   };
 
   # My packages
-  svpflow = pkg ./svpflow { };
-  
+  svpflow = pkgs.callPackage ./svpflow { };
+
   #linux-cachyos = pkg ./linux-cachyos { };
-  linux-xanmod-volodiapg = pkg ./linux-xanmod { };
+  linux-xanmod-volodiapg = pkgs.callPackage ./linux-xanmod { };
 
   # To use:
   # final: prev: {
   #   gnome = prev.nur.repos.volodiapg-nur-packages.gnome-smooth;
   # }
-  gnome-smooth = pkgs.gnome.overrideScope' (gself: gsuper: {
+  gnome-smooth =  pkgs.callPackage (pkgs.gnome.overrideScope' (gself: gsuper: {
     mutter = gsuper.mutter.overrideAttrs (oldAttrs: {
-      src = pkgs.fetchgit {
-        url = "https://gitlab.gnome.org/GNOME/mutter";
-        rev = "8329a3eb5f4960df919e0348bd445c40568d3d60";
-        sha256 = "sha256-5YTeC/HQ+5i+np8r96s8fwGShQqZnYg4n5RiLXTmZ4k=";
+      src = pkgs.fetchurl {
+        url = "mirror://gnome/sources/mutter/${pkgs.lib.versions.major oldAttrs.version}/${oldAttrs.pname}-${oldAttrs.version}.tar.xz";
+        sha256 = "8vCLJSeDlIpezILwDp6TWmHrv4VkhEvdkniKtEqngmQ=";
       };
 
       patches = [
@@ -81,5 +80,5 @@ rec {
         ./1441-main.patch
       ];
     });
-  });
+  }));
 }
