@@ -269,5 +269,4 @@ with lib.kernel;
   FUTEX_PI = yes;
 
   # WineSync driver for fast kernel-backed Wine
-  # WINESYNC = module;
 }

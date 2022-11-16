@@ -55,7 +55,7 @@ rec {
   # My packages
   svpflow = pkgs.callPackage ./svpflow { };
 
-  #linux-cachyos = pkg ./linux-cachyos { };
+  linux-cachyos = pkgs.callPackage ./linux-cachyos { };
   linux-xanmod-volodiapg = pkgs.callPackage ./linux-xanmod { };
 
   # To use:

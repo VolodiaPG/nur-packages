@@ -11,7 +11,7 @@
 let
   _major = "6";
   _minor = "0";
-  _rc = "7";
+  _rc = "9";
 
   major = "${_major}.${_minor}";
   minor = _rc;
@@ -21,8 +21,8 @@ let
   patches-src = fetchFromGitHub {
     owner = "CachyOS";
     repo = "kernel-patches";
-    rev = "ff9fb0d3439982f11b53ad2c197fffe46a81b4e1";
-    sha256 = "sha256-d8qpPlRvThtelqaDHNLL5D6eV6Dv3pFr3opXg5/eS7Q=";
+    rev = "f68c7475f94c0ff94df1409a18127494ecc10d20";
+    sha256 = "sha256-dpn7NtJmknmMe+pnzDYhrks8ML6htynYjR2nGYdll9E=";
   };
 
   # https://github.com/NixOS/nixpkgs/pull/129806
@@ -47,47 +47,34 @@ buildLinux {
 
   src = fetchTarball {
     url = "https://cdn.kernel.org/pub/linux/kernel/v${_major}.x/linux-${version}.tar.xz";
-    sha256 = "sha256:0s2b2g57bzmcaidpcbn9k9hqb4bmahjk6hkfgva98pr92r5rq2nq";
+    sha256 = "sha256:1bmqvrbj8dz9qgsi1y1bs6zfkvnfm5nxmd56h83ldqdd1b9xb1k1";
   };
 
   modDirVersion = "${version}-cachyos-bore";
 
-  structuredExtraConfig =
+   structuredExtraConfig =
     let
       cfg = import ./config.nix args;
     in
     if lto then
       ((builtins.removeAttrs cfg [ "GCC_PLUGINS" "FORTIFY_SOURCE" ]) // (with lib.kernel; {
-        LTO = yes;
         LTO_NONE = no;
-        HAS_LTO_CLANG = yes;
         LTO_CLANG_FULL = yes;
-        LTO_CLANG_THIN = no;
-        HAVE_GCC_PLUGINS = yes;
       })) else cfg;
 
+  config = {
+    # needed to get the vm test working. whatever.
+    isEnabled = f: true;
+    isYes = f: true;
 
-  # kernelPatches = [ ];
+  };
 
   kernelPatches = (builtins.map
     (name: {
       inherit name;
       patch = name;
     })
-    # (lib.filesystem.listFilesRecursive "${patches-src}/bore"));
     [
-      # Block patches. Set BFQ as default
-      # "${patches-src}/${major}/block/0001-block-Kconfig.iosched-set-default-value-of-IOSCHED_B.patch"
-      # "${patches-src}/${major}/block/0002-block-Fix-depends-for-BLK_DEV_ZONED.patch"
-      # "${patches-src}/${major}/block/0002-LL-elevator-set-default-scheduler-to-bfq-for-blk-mq.patch"
-      # "${patches-src}/${major}/block/0003-LL-elevator-always-use-bfq-unless-overridden-by-flag.patch"
-
-      # "${patches-src}/${major}/intel/xanmod/0001-intel_rapl-Silence-rapl-trace-debug.patch"
-      # "${patches-src}/${major}/intel/xanmod/0002-firmware-Enable-stateless-firmware-loading.patch "
-      # "${patches-src}/${major}/intel/xanmod/0003-locking-rwsem-spin-faster.patch"
-      # "${patches-src}/${major}/intel/xanmod/0004-drivers-initialize-ata-before-graphics.patch"
-      # "${patches-src}/${major}/intel/xanmod/0005-init-wait-for-partition-and-retry-scan.patch"
-
       "${patches-src}/${major}/all/0001-cachyos-base-all.patch"
       "${patches-src}/${major}/misc/0001-Add-latency-priority-for-CFS-class.patch"
       "${patches-src}/${major}/sched/0001-bore-cachy.patch"
