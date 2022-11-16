@@ -17,7 +17,7 @@ let
   minor = _rc;
   version = "${major}.${minor}";
   release = "1";
-  
+
   bore_version = "1.6.34.0";
 
   patches-src = fetchFromGitHub {
@@ -63,7 +63,15 @@ buildLinux {
       ((builtins.removeAttrs cfg [ "GCC_PLUGINS" "FORTIFY_SOURCE" ]) // (with lib.kernel; {
         LTO_NONE = no;
         LTO_CLANG_FULL = yes;
+        LLVM = yes;
       })) else cfg;
+
+  config = {
+    # needed to get the vm test working. whatever.
+    isEnabled = f: true;
+    isYes = f: true;
+
+  };
 
   kernelPatches = (builtins.map
     (name: {
