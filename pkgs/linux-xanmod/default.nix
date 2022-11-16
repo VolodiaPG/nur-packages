@@ -63,7 +63,6 @@ buildLinux {
       ((builtins.removeAttrs cfg [ "GCC_PLUGINS" "FORTIFY_SOURCE" ]) // (with lib.kernel; {
         LTO_NONE = no;
         LTO_CLANG_FULL = yes;
-        LLVM = yes;
       })) else cfg;
 
   config = {
