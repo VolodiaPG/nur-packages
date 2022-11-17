@@ -13,10 +13,10 @@
 }:
 
 let
-  # sources = pkgs.callPackage ../_sources/generated.nix { };
-  # pkg = path: args: pkgs.callPackage path ({
-  #   inherit sources;
-  # } // args);
+  sources = pkgs.callPackage ../_sources/generated.nix { };
+  pkg = path: args: pkgs.callPackage path ({
+    inherit sources;
+  } // args);
   ifNotCI = p: if ci then null else p;
   ifFlakes = p: if inputs != null then p else null;
 in
@@ -53,16 +53,16 @@ rec {
   };
 
   # My packages
-  svpflow = pkgs.callPackage ./svpflow { };
+  svpflow = pkg ./svpflow { };
 
-  linux-cachyos = pkgs.callPackage ./linux-cachyos { };
-  linux-xanmod-volodiapg = pkgs.callPackage ./linux-xanmod { };
+  linux-cachyos = pkg ./linux-cachyos { };
+  linux-xanmod-volodiapg = pkg ./linux-xanmod { };
 
   # To use:
   # final: prev: {
   #   gnome = prev.nur.repos.volodiapg-nur-packages.gnome-smooth;
   # }
-  gnome-smooth =  pkgs.callPackage (pkgs.gnome.overrideScope' (gself: gsuper: {
+  gnome-smooth =  pkg (pkgs.gnome.overrideScope' (gself: gsuper: {
     mutter = gsuper.mutter.overrideAttrs (oldAttrs: {
       src = pkgs.fetchurl {
         url = "mirror://gnome/sources/mutter/${pkgs.lib.versions.major oldAttrs.version}/${oldAttrs.pname}-${oldAttrs.version}.tar.xz";
