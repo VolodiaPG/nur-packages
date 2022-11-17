@@ -62,7 +62,7 @@ rec {
   # final: prev: {
   #   gnome = prev.nur.repos.volodiapg-nur-packages.gnome-smooth;
   # }
-  gnome-smooth =  pkg (pkgs.gnome.overrideScope' (gself: gsuper: {
+  gnome-smooth =  pkgs.gnome.overrideScope' (gself: gsuper: {
     mutter = gsuper.mutter.overrideAttrs (oldAttrs: {
       src = pkgs.fetchurl {
         url = "mirror://gnome/sources/mutter/${pkgs.lib.versions.major oldAttrs.version}/${oldAttrs.pname}-${oldAttrs.version}.tar.xz";
@@ -80,5 +80,5 @@ rec {
         ./1441-main.patch
       ];
     });
-  }));
+  });
 }
