@@ -56,7 +56,7 @@ rec {
   svpflow = pkg ./svpflow { };
 
   linux-cachyos = pkg ./linux-cachyos { };
-  linux-xanmod-volodiapg = pkg ./linux-xanmod { };
+  # linux-xanmod-volodiapg = pkg ./linux-xanmod { };
 
   # To use:
   # final: prev: {

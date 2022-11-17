@@ -21,8 +21,15 @@ let
   patches-src = fetchFromGitHub {
     owner = "CachyOS";
     repo = "kernel-patches";
-    rev = "f68c7475f94c0ff94df1409a18127494ecc10d20";
-    sha256 = "sha256-dpn7NtJmknmMe+pnzDYhrks8ML6htynYjR2nGYdll9E=";
+    rev = "36110278e7995a632cc94b80175acfc3417f1a6b";
+    sha256 = "sha256-CNhj1T/EOJIm+PJh0j6c1rlk6z0zhmNJfVO0kyWhK4A=";
+  };
+
+  config-src = fetchFromGitHub {
+    owner = "CachyOS";
+    repo = "linux-cachyos";
+    rev = "d93c94a";
+    sha256 = "sha256-qBEnzJQZ498hsrzxTae8HWMdAV1i5OqAGslczBCcApQ=";
   };
 
   # https://github.com/NixOS/nixpkgs/pull/129806
@@ -38,9 +45,16 @@ let
     stdenv'.override {
       extraNativeBuildInputs = [ llvmPin.lld pkgs.patchelf ];
     };
+
+  configfile = builtins.storePath (builtins.toFile "config" (lib.concatStringsSep "\n"
+    (map (builtins.getAttr "configLine") "${config-src}/linux-cachyos/config"))
+  );
 in
 buildLinux {
   inherit lib version;
+
+  allowImportFromDerivation = true;
+  defconfig = "${config-src}/linux-cachyos/config";
 
   stdenv = if lto then stdenvLLVM else stdenv;
   extraMakeFlags = lib.optionals lto [ "LLVM=1" "LLVM_IAS=1" ];
@@ -52,7 +66,7 @@ buildLinux {
 
   modDirVersion = "${version}-cachyos-bore";
 
-   structuredExtraConfig =
+  structuredExtraConfig =
     let
       cfg = import ./config.nix args;
     in
@@ -66,7 +80,6 @@ buildLinux {
     # needed to get the vm test working. whatever.
     isEnabled = f: true;
     isYes = f: true;
-
   };
 
   kernelPatches = (builtins.map
@@ -79,8 +92,6 @@ buildLinux {
       "${patches-src}/${major}/misc/0001-Add-latency-priority-for-CFS-class.patch"
       "${patches-src}/${major}/sched/0001-bore-cachy.patch"
     ]);
-
-
 
   extraMeta.broken = !stdenv.hostPlatform.isx86_64;
 }
