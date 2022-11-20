@@ -64,11 +64,6 @@ rec {
   # }
   gnome-smooth =  pkgs.gnome.overrideScope' (gself: gsuper: {
     mutter = gsuper.mutter.overrideAttrs (oldAttrs: {
-      src = pkgs.fetchurl {
-        url = "mirror://gnome/sources/mutter/${pkgs.lib.versions.major oldAttrs.version}/${oldAttrs.pname}-${oldAttrs.version}.tar.xz";
-        sha256 = "8vCLJSeDlIpezILwDp6TWmHrv4VkhEvdkniKtEqngmQ=";
-      };
-
       patches = [
         # Fix build with separate sysprof.
         # https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/2572
