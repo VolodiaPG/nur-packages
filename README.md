@@ -35,3 +35,5 @@ Uncomment this if you use travis:
 -->
 [![Cachix Cache](https://img.shields.io/badge/cachix-volodiapg-blue.svg)](https://volodiapg.cachix.org)
 
+
+> nix-prefetch-url --unpack "https://github.com/CachyOS/kernel-patches/archive/8544d51e0557c59f438453ce1a4ac22764d244b2.tar.gz"

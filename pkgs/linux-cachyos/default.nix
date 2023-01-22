@@ -10,8 +10,8 @@
 # https://github.com/NixOS/nixpkgs/blob/nixos-unstable/pkgs/os-specific/linux/kernel/linux-xanmod.nix
 let
   _major = "6";
-  _minor = "0";
-  _rc = "9";
+  _minor = "1";
+  _rc = "7";
 
   major = "${_major}.${_minor}";
   minor = _rc;
@@ -21,15 +21,15 @@ let
   patches-src = fetchFromGitHub {
     owner = "CachyOS";
     repo = "kernel-patches";
-    rev = "36110278e7995a632cc94b80175acfc3417f1a6b";
-    sha256 = "sha256-CNhj1T/EOJIm+PJh0j6c1rlk6z0zhmNJfVO0kyWhK4A=";
+    rev = "8544d51e0557c59f438453ce1a4ac22764d244b2";
+    sha256 = "093509fmlir6q1pw7di4pl2fizswgfyx8rz85kb5s8nj86jvcvqc";
   };
 
   config-src = fetchFromGitHub {
     owner = "CachyOS";
     repo = "linux-cachyos";
-    rev = "d93c94a";
-    sha256 = "sha256-qBEnzJQZ498hsrzxTae8HWMdAV1i5OqAGslczBCcApQ=";
+    rev = "8d695c6ad213f7f5b9cf35bdcf7031084c113a22";
+    sha256 = "0x4a48m4fki5g728laqd7ah8dm135dpxzc1mkr8sapbizabi6wvj";
   };
 
   # https://github.com/NixOS/nixpkgs/pull/129806
@@ -61,7 +61,7 @@ buildLinux {
 
   src = fetchTarball {
     url = "https://cdn.kernel.org/pub/linux/kernel/v${_major}.x/linux-${version}.tar.xz";
-    sha256 = "sha256:1bmqvrbj8dz9qgsi1y1bs6zfkvnfm5nxmd56h83ldqdd1b9xb1k1";
+    sha256 = "14pynxvjgqijzgk8c99cdnakszxf0wlqf3q9pbwa06xjdla9shdv";
   };
 
   modDirVersion = "${version}-cachyos-bore";
