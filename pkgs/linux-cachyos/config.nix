@@ -72,14 +72,6 @@ with lib.kernel;
   # Enable USER_NS_UNPRIVILEGED
   USER_NS = yes;
 
-  # Enable WINE FASTSYNC
-  WINESYNC = yes;
-
-
-
-
-
-
 
   # # BBR & CAKE
   # TCP_CONG_CUBIC = lib.mkForce module;
