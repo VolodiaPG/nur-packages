@@ -37,3 +37,11 @@ Uncomment this if you use travis:
 
 
 > nix-prefetch-url --unpack "https://github.com/CachyOS/kernel-patches/archive/8544d51e0557c59f438453ce1a4ac22764d244b2.tar.gz"
+>
+> nix-build -E 'with import <nixpkgs> {}; 
+                        fetchFromGitHub {
+                            owner = "bitcoinunlimited";
+                            repo = "bitcoinunlimited";
+                            rev = "v1.0.2.0";
+                            sha256 = "17cmy0s1908s2rqs0zwr05f3541nqm2pg08n2xn97g2k3yimdg5q";
+                        }'

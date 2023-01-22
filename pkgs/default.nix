@@ -62,17 +62,23 @@ rec {
   # final: prev: {
   #   gnome = prev.nur.repos.volodiapg-nur-packages.gnome-smooth;
   # }
-  gnome-smooth =  pkgs.gnome.overrideScope' (gself: gsuper: {
+  gnome-smooth = pkgs.gnome.overrideScope' (gself: gsuper: {
     mutter = gsuper.mutter.overrideAttrs (oldAttrs: {
+      src = pkgs.fetchgit {
+        url = "https://gitlab.gnome.org/GNOME/mutter.git";
+        rev = "768ec7b0c1128c43cd3a02b17aaccb552f9626c3";
+        sha256 = "sha256-GL8N9mx7Fo3xn/lhaAkCJ9quVpZRGgUvR8yBJL7Q+Qk=";
+      };
+
       patches = [
         # Fix build with separate sysprof.
         # https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/2572
-        (pkgs.fetchpatch {
-          url = "https://gitlab.gnome.org/GNOME/mutter/-/commit/285a5a4d54ca83b136b787ce5ebf1d774f9499d5.patch";
-          sha256 = "/npUE3idMSTVlFptsDpZmGWjZ/d2gqruVlJKq4eF4xU=";
-        })
+        # (pkgs.fetchpatch {
+        #   url = "https://gitlab.gnome.org/GNOME/mutter/-/commit/285a5a4d54ca83b136b787ce5ebf1d774f9499d5.patch";
+        #   sha256 = "/npUE3idMSTVlFptsDpZmGWjZ/d2gqruVlJKq4eF4xU=";
+        # })
         # https://salsa.debian.org/gnome-team/mutter/-/blob/ubuntu/master/debian/patches/x11-Add-support-for-fractional-scaling-using-Randr.patch
-        ./1441-main.patch
+        ./1441-main.patch # git fetch origin merge-requests/1441/head:mr-1441
       ];
     });
   });
